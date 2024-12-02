@@ -3,6 +3,7 @@
 import Image from "next/image";
 import React, { useEffect } from "react";
 
+// Universities data
 const universities = [
   { nome: "Universidade de Brasília", sigla: "UnB" },
   { nome: "Universidade Federal do Rio de Janeiro", sigla: "UFRJ" },
@@ -16,14 +17,32 @@ const universities = [
   { nome: "Universidade Federal do Pará", sigla: "UFPA" }
 ];
 
+// Courses data
+const courses = [
+  { nome: "Engenharia de Software" },
+  { nome: "Medicina" },
+  { nome: "Direito" },
+  { nome: "Administração" },
+  { nome: "Engenharia Civil" },
+  { nome: "Psicologia" },
+  { nome: "Arquitetura e Urbanismo" },
+  { nome: "Ciência da Computação" },
+  { nome: "Enfermagem" },
+  { nome: "Nutrição" }
+];
+
 type University = {
   nome: string;
-  sigla: string;
+  sigla?: string;
+};
+
+type Course = {
+  nome: string;
 };
 
 export default function Home() {
   const [searchBarValue, setSearchBarValue] = React.useState("");
-  const [filteredSuggestions, setFilteredSuggestions] = React.useState<University[]>([]);
+  const [filteredSuggestions, setFilteredSuggestions] = React.useState<(University | Course)[]>([]);
   const [suggestion, setSuggestion] = React.useState("");
   const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null);
   const [lastTypedValue, setLastTypedValue] = React.useState<string>("");
@@ -31,7 +50,7 @@ export default function Home() {
   useEffect(() => {
     if (selectedIndex !== null && filteredSuggestions.length > 0) {
       setSearchBarValue(filteredSuggestions[selectedIndex].nome);
-  
+
       // Scroll the selected item into view
       const selectedItem = document.getElementById(`suggestion-${selectedIndex}`);
       if (selectedItem) {
@@ -51,13 +70,18 @@ export default function Home() {
     setLastTypedValue(value);
 
     if (value) {
-      const suggestions = universities.filter((uni) =>
+      const filteredUniversities = universities.filter((uni) =>
         uni.nome.toLowerCase().includes(value.toLowerCase()) ||
-        uni.sigla.toLowerCase().includes(value.toLowerCase())
+        uni.sigla?.toLowerCase().includes(value.toLowerCase())
       );
-      setFilteredSuggestions(suggestions);
+      const filteredCourses = courses.filter((course) =>
+        course.nome.toLowerCase().includes(value.toLowerCase())
+      );
+
+      const allSuggestions = [...filteredUniversities, ...filteredCourses];
+      setFilteredSuggestions(allSuggestions);
       setSelectedIndex(null); // Reset selected index when input changes
-      setSuggestion(suggestions.length > 0 ? suggestions[0].nome : "");
+      setSuggestion(allSuggestions.length > 0 ? allSuggestions[0].nome : "");
     } else {
       setFilteredSuggestions([]);
       setSelectedIndex(null);
@@ -96,8 +120,8 @@ export default function Home() {
     }
 
     if (e.key === "Enter" && selectedIndex !== null) {
-      const selectedUniversity = filteredSuggestions[selectedIndex];
-      setSearchBarValue(selectedUniversity.nome);
+      const selectedItem = filteredSuggestions[selectedIndex];
+      setSearchBarValue(selectedItem.nome);
       setFilteredSuggestions([]);
       setSuggestion("");
       setSelectedIndex(null);
@@ -106,7 +130,7 @@ export default function Home() {
 
   return (
     <div className="flex h-screen w-screen items-center justify-center bg-standard bg-cover bg-center">
-      <div className="relative w-[90%] sm:w-[50%]">
+      <div className="relative w-[90%] h-[70%] sm:w-[50%] sm:h-[50%]">
         {/* Search bar */}
         <div className="relative flex h-[48px] items-center rounded-[24px] bg-white shadow-md focus-within:ring-2 focus-within:ring-sky-500">
           <Image
@@ -136,29 +160,62 @@ export default function Home() {
 
         {/* Suggestions dropdown */}
         {filteredSuggestions.length > 0 && (
-          <div className="absolute mt-4 w-full rounded-[24px] bg-white shadow-md overflow-hidden">
-            <div className="px-4 py-2 font-bold text-gray-700 border-none">
-              Universidades
-            </div>
-            <ul className="max-h-48 overflow-y-auto">
-              {filteredSuggestions.map((uni, index) => (
-                <li
-                  id={`suggestion-${index}`}
-                  key={index}
-                  className={`cursor-pointer px-4 py-2 text-gray-700 ${
-                    selectedIndex === index ? "bg-gray-200" : "hover:bg-gray-100"
-                  }`}
-                  onClick={() => {
-                    setSearchBarValue(uni.nome);
-                    setFilteredSuggestions([]);
-                    setSuggestion("");
-                    setSelectedIndex(null);
-                  }}
-                >
-                  {uni.nome} ({uni.sigla})
-                </li>
-              ))}
-            </ul>
+          <div className="absolute mt-4 w-full max-h-full rounded-[24px] bg-white shadow-md overflow-hidden">
+            {/* Universities section */}
+            {filteredSuggestions.some(item => (item as University).sigla) && (
+              <>
+                <div className="px-4 py-2 font-bold text-gray-700 border-none">
+                  Universidades
+                </div>
+                <ul className="max-h-48 overflow-y-auto">
+                  {filteredSuggestions
+                    .filter(item => (item as University).sigla)
+                    .map((item, index) => (
+                      <li
+                        id={`suggestion-${index}`}
+                        key={index}
+                        className={`cursor-pointer px-4 py-2 text-gray-700 ${selectedIndex === index ? "bg-gray-200" : "hover:bg-gray-100"}`}
+                        onClick={() => {
+                          setSearchBarValue(item.nome);
+                          setFilteredSuggestions([]);
+                          setSuggestion("");
+                          setSelectedIndex(null);
+                        }}
+                      >
+                        {(item as University).nome} ({(item as University).sigla})
+                      </li>
+                    ))}
+                </ul>
+              </>
+            )}
+
+            {/* Courses section */}
+            {filteredSuggestions.some(item => !(item as University).sigla) && (
+              <>
+                <div className="px-4 py-2 font-bold text-gray-700 border-none">
+                  Cursos
+                </div>
+                <ul className="max-h-48 overflow-y-auto">
+                  {filteredSuggestions
+                    .filter(item => !(item as University).sigla)
+                    .map((item, index) => (
+                      <li
+                        id={`suggestion-${index}`}
+                        key={index}
+                        className={`cursor-pointer px-4 py-2 text-gray-700 ${selectedIndex === index ? "bg-gray-200" : "hover:bg-gray-100"}`}
+                        onClick={() => {
+                          setSearchBarValue(item.nome);
+                          setFilteredSuggestions([]);
+                          setSuggestion("");
+                          setSelectedIndex(null);
+                        }}
+                      >
+                        {(item as Course).nome}
+                      </li>
+                    ))}
+                </ul>
+              </>
+            )}
           </div>
         )}
       </div>
