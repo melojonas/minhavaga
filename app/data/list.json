@@ -1,0 +1,87 @@
+{
+    "Universidades": [
+      {
+        "nome": "Universidade de Brasília",
+        "sigla": "UnB"
+      },
+      {
+        "nome": "Universidade Federal do Rio de Janeiro",
+        "sigla": "UFRJ"
+      },
+      {
+        "nome": "Universidade Federal de Minas Gerais",
+        "sigla": "UFMG"
+      },
+      {
+        "nome": "Universidade Federal do Rio Grande do Sul",
+        "sigla": "UFRGS"
+      },
+      {
+        "nome": "Universidade Federal de Santa Catarina",
+        "sigla": "UFSC"
+      },
+      {
+        "nome": "Universidade Federal do Paraná",
+        "sigla": "UFPR"
+      },
+      {
+        "nome": "Universidade Federal da Bahia",
+        "sigla": "UFBA"
+      },
+      {
+        "nome": "Universidade Federal de Pernambuco",
+        "sigla": "UFPE"
+      },
+      {
+        "nome": "Universidade Federal do Ceará",
+        "sigla": "UFC"
+      },
+      {
+        "nome": "Universidade Federal do Pará",
+        "sigla": "UFPA"
+      }
+    ],
+    "Cursos": [
+        {
+            "nome": "Engenharia de Software",
+            "area": "Exatas"
+        },
+        {
+            "nome": "Medicina",
+            "area": "Saúde"
+        },
+        {
+            "nome": "Direito",
+            "area": "Humanas"
+        },
+        {
+            "nome": "Administração",
+            "area": "Humanas"
+        },
+        {
+            "nome": "Ciência da Computação",
+            "area": "Exatas"
+        },
+        {
+            "nome": "Engenharia Civil",
+            "area": "Exatas"
+        },
+        {
+            "nome": "Psicologia",
+            "area": "Humanas"
+        },
+        {
+            "nome": "Arquitetura",
+            "area": "Exatas"
+        },
+        {
+            "nome": "Enfermagem",
+            "area": "Saúde"
+        },
+        {
+            "nome": "Nutrição",
+            "area": "Saúde"
+        }
+    ]
+}
+  
