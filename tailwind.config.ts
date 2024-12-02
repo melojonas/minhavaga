@@ -9,7 +9,7 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        'custom-image': "url('/images/background.jpg')",
+        'standard': "url('/images/background.jpg')",
       },
       colors: {
         background: "var(--background)",
